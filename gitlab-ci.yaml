@@ -1,0 +1,67 @@
+# Selecionamos o que queremos para cache
+cache:
+  paths:
+  - vendor/
+
+services:
+- mysql
+
+before_script:
+# Instalando o git
+- apt-get update -yqq
+- apt-get install git -yqq
+
+# Instalando os pacotes necessarios para os testes
+- apt-get -yqqf install vim wget zip unzip subversion mysql-client libmcrypt-dev libmysqlclient-dev --fix-missing
+
+# Instalando o driver mysql
+- docker-php-ext-install mysqli pdo_mysql mbstring
+
+# Instalando Xdebug
+- pecl install xdebug
+
+# Extensoes PHP
+- docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
+
+# Instalando composer
+- curl -sS https://getcomposer.org/installer | php
+
+# Install all todas as dependencias do projeto
+- php composer.phar install
+
+- bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
+
+variables:
+  MYSQL_DATABASE: wordpress_teste
+  MYSQL_ROOT_PASSWORD: mysql
+  WP_VERSION: latest
+  WP_MULTISITE: "0"
+
+# Como o exemplo, testaremos a versao 5.7
+test:php5.7:
+  image: php:5.7
+  script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+
+test:php5.7:multisite:
+  variables:
+   WP_VERSION: latest
+   WP_MULTISITE: "1"
+  image: php:5.7
+  script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+
+#Testando php7.x
+test:php7:
+  image: php:7
+  script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+
+
+test:php7:multisite:
+  variables:
+   WP_VERSION: latest
+   WP_MULTISITE: "1"
+  image: php:7
+  script:
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
