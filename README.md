@@ -3,7 +3,7 @@ Repositorio contendo o wordpress + mysql + prometheus + grafana + argoCD
 
 Utilizei o Makefile para separar os desafios em parte, facilitando a analise do projeto, para isso tera que ter o *make* instalado em sua máquina através do comando `sudo apt install make`.
 
-Após clonar esse repositório com o comando `git clone foobar`, iniciaremos o minikube com o comando `make minikube`. 
+Após clonar esse repositório com o comando `git clone https://github.com/headllama/projeto-wordpress-bis2bis`, iniciaremos o minikube com o comando `make minikube`. 
 
 Para fazer deploy da primeira parte - que constitui no ambiente wordpress e mysql - para isso, daremos o comando `make step-1`. Após os pods subirem, deveremos pegar o IP da aplicação utilizando o script `./script.sh wordpress`, acessando em seu navegador o wordpress.
 
